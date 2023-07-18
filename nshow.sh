@@ -2,22 +2,33 @@
 
 set -e
 
-pid=$(cat /tmp/websocat.pid)
+wpid=$(cat /tmp/websocat_pid.txt)
 
-while IFS= read -r line
+while read -r line
 do
-    if [[ "$line" == '["EOSE","1"]' ]]; then
-        kill "$pid"
+
+    type=$(echo "$line" | jq -r '.[0]')
+
+    if [[ "$type" == "REQ" ]]; then
+        echo "$line"
+    fi
+
+    if [[ "$type" == "EVENT" ]]; then
+
+        echo ""
+
+        created_at=$(echo "$line" | jq -r '.[2].created_at')
+        timestamp=$(date -r "$created_at")
+        echo "$timestamp"
+
+        content=$(echo "$line" | jq -r '.[2].content')
+        echo "└── $content"
+    fi
+
+    if [[ "$type" == "EOSE" ]]; then
+        kill $wpid
+        echo "EOSE"
         break
     fi
 
-    content=$(echo "$line" | jq -r '.[2].content')
-    echo "Received: $content"
-
-    created_at=$(echo "$line" | jq -r '.[2].created_at')
-    timestamp=$(date -r "$created_at")
-    echo "Timestamp: $timestamp"
-
-done < /tmp/nostr_pipe
-
-rm /tmp/nostr_pipe
+done

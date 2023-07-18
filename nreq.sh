@@ -22,11 +22,5 @@ json=$(jq -n \
 
 msg=$(echo "[\"REQ\", \"1\", $json]" | jq -c '.')
 
-echo -e "Connected Relay: $RELAY"
-echo -e "Request Message: $msg"
-
-mkfifo /tmp/nostr_pipe
-
-echo "$msg" | websocat --no-close --text "$RELAY" > /tmp/nostr_pipe &
-
-echo $! > /tmp/websocat.pid
+echo "$msg"
+echo "$msg" | websocat --no-close --text "$RELAY" & echo $! > /tmp/websocat_pid.txt
