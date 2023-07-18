@@ -2,7 +2,10 @@
 
 set -e
 
-[[ -z "$RELAY" ]] && echo "ERROR: environment variable RELAY not set" && exit 1
+[[ -z "$CONFIG_NOSTR" ]] && echo "ERROR: variable CONFIG_NOSTR not set" && exit 1
+
+# Parse config file into local data structure.
+config_data=$(cat "$CONFIG_NOSTR")
 
 pubkey="$NPUB"
 created_at=$(date +%s)
@@ -26,7 +29,11 @@ event=$(ncli event -sign "$event")
 
 msg=$(echo "[\"EVENT\", ${event}]" | jq -c '.')
 
-#echo -n "$event"
-echo "$msg"
+# 3. Publish EVENT to every relay listed in config.
 
-echo "$msg" | websocat --no-close --text "$RELAY"
+relay_list=$(echo "$config_data" | jq -r '.relays[]')
+while IFS= read -r relay; do
+      # Add your logic here to process each relay
+    echo "$msg"
+    echo "$msg" | websocat --no-close --text "$relay" & echo $! > /tmp/websocat_pid.txt
+done <<< "$relay_list"

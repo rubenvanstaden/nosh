@@ -19,8 +19,11 @@ Therefore, you will have to manually add and remove relays and followings to you
 ```shell
 {
   "relays": [
-    "ws://localhost:8080"
+    "ws://0.0.0.0:8080"
   ],
+  "follows": [
+    "aa327517150b10655711a01708c18753b0a33b1b44d058ac41d368ab15b95190"
+  ]
 }
 ```
 
@@ -30,13 +33,19 @@ Therefore, you will have to manually add and remove relays and followings to you
 # Install path
 export SCRIPT="$HOME/.local/bin"
 
-# Relay to connect too.
-export RELAY=ws://0.0.0.0:8080
-
 make install
 ```
 
 ## Usage
+
+1. Set environment variable for secret key and public key
+
+```shell
+export CONFIG_NOSTR="$HOME/.config/nostr/new.json"
+
+export NPUB=<npub>
+export NSEC=<nsec>
+```
 
 1. Request events from relay and pipe the JSON response to a more clean output.
 
