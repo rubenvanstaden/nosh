@@ -2,12 +2,12 @@
 
 set -e
 
-[[ -z "$RELAY" ]] && echo "ERROR: env var $RELAY not set" && exit 1
+[[ -z "$RELAY" ]] && echo "ERROR: environment variable RELAY not set" && exit 1
 
 pubkey="$NPUB"
 created_at=$(date +%s)
 kind=1
-content="event pushed"
+content=$1
 
 echo $created_at
 
