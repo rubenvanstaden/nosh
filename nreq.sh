@@ -7,7 +7,7 @@ set -e
 pubkey="$NPUB"
 authors="[\"${pubkey}\"]"
 kinds='[1]'
-limit=3
+limit=8
 
 # json=$(jq -n \
 #     --argjson authors "$authors" \
