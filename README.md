@@ -8,6 +8,10 @@ Relay and user subscription information is kept in a local config file:
 cat ~/.config/nostr/cfg.json
 ```
 
+The purpose of these minimal scripts are not to manage your config file for you. This is best done with a higher level implemenation, like Go or Rust.
+
+Therefore, you will have to manually add and remove relays and followings to your local config.
+
 ## Setup
 
 1. First install the nostr [cli](rubenvanstaden/nostr: Notes and Other Zettels Transmitted by Relays) written in Go.
@@ -34,25 +38,13 @@ make install
 
 ## Usage
 
-1. First you need to add a relay to connect too.
-
-```shell
-nrelay --add 'ws://localhost:8080'
-```
-
-1. First you have to follow a user via their public key (this includes yourself).
-
-```shell
-nfollow <npub>
-```
-
-2. Request events from relay and pipe the JSON response to a more clean output.
+1. Request events from relay and pipe the JSON response to a more clean output.
 
 ```shell
 nreq | nshow
 ```
 
-4. Publish text event to relay
+2. Publish text event to relay
 
 ```shell
 nevent 'Hello friend'
