@@ -4,9 +4,9 @@ set -e
 
 [[ -z "$CONFIG_NOSTR" ]] && echo "ERROR: variable CONFIG_NOSTR not set" && exit 1
 
-# Function to add a relay to the config file
+# Function to add a follow to the config file
 add() {
-  local relay="$1"
+    local follow=$(nkey decode $1)
   local config_data
 
   # Check if config file exists
@@ -14,8 +14,8 @@ add() {
     # Read config file contents
     config_data=$(cat "$CONFIG_NOSTR")
 
-    # Append relay to the config data
-    config_data=$(echo "$config_data" | jq --arg relay "$relay" '.relays += [$relay]')
+    # Append follow to the config data
+    config_data=$(echo "$config_data" | jq --arg follow "$follow" '.follows += [$follow]')
 
     # Write the updated config data back to the file
     echo "$config_data" > "$CONFIG_NOSTR"
@@ -28,7 +28,7 @@ add() {
 }
 
 remove() {
-  local relay="$1"
+  local follow="$1"
   local config_data
 
   # Check if config file exists
@@ -36,8 +36,8 @@ remove() {
     # Read config file contents
     config_data=$(cat "$CONFIG_NOSTR")
 
-    # Remove relay from the config data
-    config_data=$( echo "$config_data" | jq --arg relay "$relay" 'del(.relays[] | select(. == $relay))')
+    # Remove follow from the config data
+    config_data=$( echo "$config_data" | jq --arg follow "$follow" 'del(.follows[] | select(. == $follow))')
 
     # Write the updated config data back to the file
     echo "$config_data" > "$CONFIG_NOSTR"
@@ -58,8 +58,8 @@ list() {
     # Read config file contents
     config_data=$(cat "$CONFIG_NOSTR")
 
-    # Extract relay URLs and output them
-    echo "$config_data" | jq -r '.relays[]'
+    # Extract follow URLs and output them
+    echo "$config_data" | jq -r '.follows[]'
   else
     echo "Config file not found: $CONFIG_NOSTR"
     exit 1
